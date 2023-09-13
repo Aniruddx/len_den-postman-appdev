@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "192994206846",
+    "project_id": "lenden1-75aae",
+    "storage_bucket": "lenden1-75aae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192994206846:android:ddd45cb3bd88d58974a42f",
+        "android_client_info": {
+          "package_name": "com.anni.len_den1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192994206846-1p0mciih4ibfo5pomjdr3o4s92hpqlk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhekSnUa7uQflZRtC14pHUyVzRPLytQik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192994206846-1p0mciih4ibfo5pomjdr3o4s92hpqlk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
