@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:len_den1/view/lend.dart';
+import 'package:len_den1/view/navigator.dart';
+
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class LoginScreen extends StatelessWidget {
         // Assuming this code is inside your Google Sign-In success block
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => HomePage(),
+            builder: (context) => Navigatorr(),
           ),
         );
       }
@@ -170,7 +171,7 @@ class LoginScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle (
                                 fontFamily: 'EuphoriaScript',
-                                //'Euphoria Script',
+                                
                                 fontSize: 75.3656234741*ffem,
                                 fontWeight: FontWeight.w400,
                                 height: 1.1625*ffem/fem,

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'ham-menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:custom_navigation_bar/custom_navigation_bar.dart';
-import 'borrow.dart';
-import 'post.dart';
 
-import 'lend1.dart';
+
 final CollectionReference userRef =  FirebaseFirestore.instance.collection('users');
 
 class HomePage extends StatefulWidget {
@@ -28,12 +25,7 @@ class _HomePageState extends State<HomePage> {
     });
   }*/
   
-  int _index = 0;
-  List<Widget> _screens = [
-    HomePage(),
-    post(),
-    borrow(),
-  ];
+  
 
   @override
   
@@ -41,7 +33,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_index],
+      
 
       backgroundColor:Color.fromARGB(255, 3, 63, 113),
       appBar: AppBar(
@@ -76,51 +68,6 @@ class _HomePageState extends State<HomePage> {
         ],
         ) ,
         ),
-
-        bottomNavigationBar: CustomNavigationBar(
-          
-          backgroundColor: Colors.black,         
-          
-          items: [
-            CustomNavigationBarItem(
-              //onItemTap () {},
-              icon: Icon(Icons.gavel_outlined,
-              color: Colors.white,),
-              //label: 'Lend',
-            ),
-            CustomNavigationBarItem(
-              icon: Icon(Icons.add_box_sharp,
-              color: Colors.white),
-              //label: 'Post',
-            ),
-            CustomNavigationBarItem(
-              
-              icon: Icon(Icons.book_outlined,
-              color: Colors.white,),
-              //label: 'Borrow',
-              
-            ),
-            
-          ],
-          onTap: (i){
-            setState(() {
-              _index = i;
-            });
-          },
-          /*selectedLabelStyle: TextStyle(
-            color: Colors.white, 
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
-          unselectedLabelStyle: TextStyle(
-            color: const Color.fromARGB(255, 185, 51, 51), 
-            fontSize: 15,
-            fontWeight: FontWeight.bold, 
-        ),*/
-        ),
-        
-
-
         );
   }
 }
