@@ -34,18 +34,33 @@ class _NavigatorrState extends State<Navigatorr> {
               //onItemTap () {},
               icon: Icon(Icons.gavel_outlined,
               color: Colors.white,),
-              //label: 'Lend',
+              title: Text('Lend',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+              ),
+              ),
             ),
             CustomNavigationBarItem(
               icon: Icon(Icons.add_box_sharp,
               color: Colors.white),
-              //label: 'Post',
+              title: Text('Post',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+              ),
+              ),
             ),
             CustomNavigationBarItem(
               
               icon: Icon(Icons.book_outlined,
               color: Colors.white,),
-              //label: 'Borrow',
+              title: Text('Borrow',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+              ),
+              ),
               
             ),
             
