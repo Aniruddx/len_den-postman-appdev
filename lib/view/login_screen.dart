@@ -5,10 +5,16 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:len_den1/view/navigator.dart';
 
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
-  
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   FirebaseAuth _authh = FirebaseAuth.instance;
+
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   googleLogin(BuildContext context) async {
@@ -67,21 +73,7 @@ class LoginScreen extends StatelessWidget {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return Scaffold(
-      /*appBar: AppBar(
-        title: const Text('Login'),
-        actions: [
-          TextButton(
-            onPressed: () => logout(),
-            child: const Text(
-              'Logout',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),*/
+      
       body: Center(
         child: Column(
           children: [ 

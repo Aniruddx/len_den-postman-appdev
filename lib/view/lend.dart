@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:len_den1/view/chat.dart';
 import 'ham-menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'chat.dart';
 
 
 
@@ -17,9 +19,16 @@ final _itemStream = FirebaseFirestore.instance.collection('lenditems').snapshots
   void initState(){
     super.initState();
   }
+
+String chatRoomId(String user1, String user2) {
+  if(user1[0].toLowerCase().codeUnits[0] > user2[0].toLowerCase().codeUnits[0]) {
+    return "$user1$user2";
+  }
+  else {
+    return "$user2$user1";}
+  }
+
   @override
-  
-  
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +84,8 @@ final _itemStream = FirebaseFirestore.instance.collection('lenditems').snapshots
             return ListView.builder(
               itemCount: docs.length,
               itemBuilder: ((context, index) {
+                final lendItem = docs[index].data() as Map<String, dynamic>;
+                 final userId = lendItem['postedBy'];
     // Create a CustomListTile for each item in the list
     return Column(
       children: [
@@ -109,21 +120,58 @@ final _itemStream = FirebaseFirestore.instance.collection('lenditems').snapshots
                       children: [
                         
                         StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance.collection('users').doc(_authh.currentUser?.uid).snapshots(),
+              stream: FirebaseFirestore.instance.collection('users').doc(userId).snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Text(
                     'Loading...',
                     style: TextStyle(
-                      fontSize: 25,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       letterSpacing: 2,
                     ),
                   );
                 }
+                final userData = snapshot.data!.data() as Map<String, dynamic>;
+                final userName = userData['name'];
+                String postedByUID = snapshot.data?['postedBy'];
                 String username = snapshot.data?['name'];
-                return Text(
+                /*return StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance.collection('users').doc(postedByUID).snapshots(),
+                  builder: (context, snapshot) {
+                    
+                      //stream: FirebaseFirestore.instance.collection('users').doc(postedByUID).get(),
+                      //builder: (context, userSnapshot) {
+                        if (!snapshot.hasData || !snapshot.data!.exists) {
+                          return Text(
+                            'Loading...',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 2,
+                            ),
+                          );
+                        }*/
+                
+                        // Retrieve the username from the user document
+                        //String username = snapshot.data?['name'];
+                
+                        return Text(
+                          username,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.white,
+                          ),
+                        );
+                      
+                    
+                  //}
+                //);
+  
+                
+                /*Text(
                   username,
                   style: TextStyle(
                     fontSize: 13,
@@ -131,7 +179,7 @@ final _itemStream = FirebaseFirestore.instance.collection('lenditems').snapshots
                     color: Colors.white,
                     
                   ),
-                );
+                );*/
               }
             ),
                         //Text(docs[index]['postedAt'],
@@ -183,7 +231,11 @@ final _itemStream = FirebaseFirestore.instance.collection('lenditems').snapshots
                       icon: const Icon(
                         Icons.send,
                         color: Colors.white,), 
-                      onPressed: () {},
+                      onPressed: () {
+                        //String roomId = chatRoomId(_authh.currentUser.displayName, user2);
+                        setState(() { Navigator.push(context, MaterialPageRoute(builder: ((context) => chat())));
+                      });
+                      },
                     ),
                     ])
               ),
