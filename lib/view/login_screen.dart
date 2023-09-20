@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -5,7 +6,10 @@ import 'package:len_den1/view/navigator.dart';
 
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
+  
+  FirebaseAuth _authh = FirebaseAuth.instance;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   googleLogin(BuildContext context) async {
     print("googleLogin method Called");
@@ -20,6 +24,15 @@ class LoginScreen extends StatelessWidget {
           accessToken: userData.accessToken,
           idToken: userData.idToken,
         );
+
+
+        await _firestore.collection('users').doc(_authh.currentUser?.uid).set({        //doc means inserting a document in my collection
+          "name": reslut.displayName, 
+          "email": reslut.email,
+          //"status": status
+        });  
+        
+        
         var finalResult =
             await FirebaseAuth.instance.signInWithCredential(credential);
         print("Result $reslut");

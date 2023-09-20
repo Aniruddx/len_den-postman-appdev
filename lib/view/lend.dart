@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ham-menu.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 
@@ -10,17 +10,13 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
-
+FirebaseAuth _authh = FirebaseAuth.instance; 
 class _HomePageState extends State<HomePage> {
 
-final _itemStream = FirebaseFirestore.instance.collection('items').snapshots();
+final _itemStream = FirebaseFirestore.instance.collection('lenditems').snapshots();
   void initState(){
     super.initState();
   }
-
-  
-  
-
   @override
   
   
@@ -29,9 +25,9 @@ final _itemStream = FirebaseFirestore.instance.collection('items').snapshots();
     return Scaffold(
       
 
-      backgroundColor:Colors.grey,
+      backgroundColor:Color.fromARGB(255, 10, 38, 71),
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Color.fromARGB(255, 20, 66, 114),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -77,11 +73,12 @@ final _itemStream = FirebaseFirestore.instance.collection('items').snapshots();
             var docs = snapshot.data!.docs;
             
             return ListView.builder(
-  itemCount: docs.length,
-  itemBuilder: ((context, index) {
+              itemCount: docs.length,
+              itemBuilder: ((context, index) {
     // Create a CustomListTile for each item in the list
     return Column(
       children: [
+        SizedBox(height: 15,),
         Container(
           margin: EdgeInsets.all(8.0), // Adjust the margin as needed
           decoration: BoxDecoration(
@@ -92,25 +89,57 @@ final _itemStream = FirebaseFirestore.instance.collection('items').snapshots();
             borderRadius: BorderRadius.circular(20.0),
             child: CustomListTile(
               topBar: Container(
+                height: 30,
                 // Customize the top bar as needed
                 //padding: EdgeInsets.all(10.0),
                 padding: EdgeInsets.all(0),
                 width: double.infinity,
-                color: Colors.black,
+                color: Color.fromARGB(255, 20, 66, 114),
                 child: Row(
                   children: [
                     IconButton(
+                      padding: EdgeInsets.all(0),
                       iconSize: 15,
                       icon: const Icon(
                         Icons.person,
                         color: Colors.white,), 
                       onPressed: () {},
                     ),
-                    Text('Username',
+                    Row(
+                      children: [
+                        
+                        StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance.collection('users').doc(_authh.currentUser?.uid).snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Text(
+                    'Loading...',
                     style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 13
+                      letterSpacing: 2,
                     ),
+                  );
+                }
+                String username = snapshot.data?['name'];
+                return Text(
+                  username,
+                  style: TextStyle(
+                    fontSize: 13,
+                    //fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    
+                  ),
+                );
+              }
+            ),
+                        //Text(docs[index]['postedAt'],
+                        //style: TextStyle(
+                        //color: Colors.white
+                        //),
+                        //)
+                      ],
                     )
 
                   ],
@@ -128,15 +157,17 @@ final _itemStream = FirebaseFirestore.instance.collection('items').snapshots();
                 style: TextStyle(
                   color: Colors.white
                 ),),
+                tileColor: Color.fromARGB(255, 17, 57, 98),
                 onTap: () {
                   // Handle tap event here
                 },
               ),
               bottomBar: Container(
+                height: 30,
                 // Customize the bottom bar as needed
                 //padding: EdgeInsets.all(8.0),
                 width: double.infinity,
-                color: Colors.black,
+                color: Color.fromARGB(255, 20, 66, 114),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -159,7 +190,7 @@ final _itemStream = FirebaseFirestore.instance.collection('items').snapshots();
             ),
           ),
         ),
-        SizedBox(height: 5)
+        
       ],
     );
   }),
@@ -168,11 +199,11 @@ final _itemStream = FirebaseFirestore.instance.collection('items').snapshots();
 
           } )),
 
+        
+
         );
   }
 }
-
-
 
 
 class CustomListTile extends StatelessWidget {
@@ -205,3 +236,5 @@ class CustomListTile extends StatelessWidget {
     );
   }
 }
+
+

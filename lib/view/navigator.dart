@@ -27,7 +27,7 @@ class _NavigatorrState extends State<Navigatorr> {
       body: _screens[_index],
       bottomNavigationBar: CustomNavigationBar(
           
-          backgroundColor: Colors.black,         
+          backgroundColor: Color.fromARGB(255, 20, 66, 114),         
           
           items: [
             CustomNavigationBarItem(
@@ -70,16 +70,7 @@ class _NavigatorrState extends State<Navigatorr> {
               _index = i;
             });
           },
-          /*selectedLabelStyle: TextStyle(
-            color: Colors.white, 
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
-          unselectedLabelStyle: TextStyle(
-            color: const Color.fromARGB(255, 185, 51, 51), 
-            fontSize: 15,
-            fontWeight: FontWeight.bold, 
-        ),*/
+          
         ),
     );
   }

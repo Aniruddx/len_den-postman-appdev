@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-//import 'login_screen.dart';
+import 'login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 
 
@@ -8,7 +11,11 @@ class Profile extends StatefulWidget {
   @override
   State<Profile> createState() => _ProfileState();
 }
-
+FirebaseAuth _authh = FirebaseAuth.instance;
+Future<void> logout() async {
+    await GoogleSignIn().disconnect();
+    FirebaseAuth.instance.signOut();
+  }
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
@@ -31,14 +38,31 @@ class _ProfileState extends State<Profile> {
 
             SizedBox(height: 5),
 
-            Text(
-              'Username',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 2,
-              ),
+            StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance.collection('users').doc(_authh.currentUser?.uid).snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Text(
+                    'Loading...',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 2,
+                    ),
+                  );
+                }
+                String username = snapshot.data?['name'];
+                return Text(
+                  username,
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 2,
+                  ),
+                );
+              }
             ),
 
             SizedBox(height: 25,),
@@ -138,7 +162,12 @@ class _ProfileState extends State<Profile> {
                     letterSpacing: 1.5,
                   ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    logout();
+                    Navigator.pushReplacement(context, 
+                    MaterialPageRoute(builder: (context) => LoginScreen())
+                    );
+                  }
                 ),
             
             
