@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 FirebaseAuth _authh = FirebaseAuth.instance; 
 class _HomePageState extends State<HomePage> {
 
-final _itemStream = FirebaseFirestore.instance.collection('lenditems').snapshots();
+//final _itemStream = FirebaseFirestore.instance.collection('lenditems').snapshots();
   void initState(){
     super.initState();
   }
@@ -69,7 +69,7 @@ String chatRoomId(String user1, String user2) {
         ),
         
         body: StreamBuilder(
-          stream: _itemStream, 
+          stream: FirebaseFirestore.instance.collection('lenditems').snapshots(), 
           builder: ((context, snapshot) {
             if (snapshot.hasError){
               return const Text('Connection Error');
@@ -78,14 +78,15 @@ String chatRoomId(String user1, String user2) {
             if (snapshot.connectionState == ConnectionState.waiting){
               return const Text('Loading....');
             }
-
+            
+            final lendItems = snapshot.data?.docs;
             var docs = snapshot.data!.docs;
             
             return ListView.builder(
-              itemCount: docs.length,
+              itemCount: lendItems?.length,
               itemBuilder: ((context, index) {
-                final lendItem = docs[index].data() as Map<String, dynamic>;
-                 final userId = lendItem['postedBy'];
+                final lendItem = lendItems?[index].data() ;
+                final userId = lendItem?['postedBy'];
     // Create a CustomListTile for each item in the list
     return Column(
       children: [
@@ -98,6 +99,7 @@ String chatRoomId(String user1, String user2) {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20.0),
+            
             child: CustomListTile(
               topBar: Container(
                 height: 30,
@@ -119,31 +121,20 @@ String chatRoomId(String user1, String user2) {
                     Row(
                       children: [
                         
-                        StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance.collection('users').doc(userId).snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Text(
-                    'Loading...',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 2,
-                    ),
-                  );
+                        FutureBuilder(
+              future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
+              builder: (context, userSnapshot) {
+                if (userSnapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // Show loading indicator
                 }
-                final userData = snapshot.data!.data() as Map<String, dynamic>;
-                final userName = userData['name'];
-                String postedByUID = snapshot.data?['postedBy'];
-                String username = snapshot.data?['name'];
-                /*return StreamBuilder<DocumentSnapshot>(
-                stream: FirebaseFirestore.instance.collection('users').doc(postedByUID).snapshots(),
-                  builder: (context, snapshot) {
-                    
-                      //stream: FirebaseFirestore.instance.collection('users').doc(postedByUID).get(),
-                      //builder: (context, userSnapshot) {
-                        if (!snapshot.hasData || !snapshot.data!.exists) {
+                if (userSnapshot.hasError) {
+                  return Text('Error: ${userSnapshot.error}');
+                }
+                
+                final userData = userSnapshot.data?.data();
+                
+                
+                        /*if (!snapshot.hasData || !snapshot.data!.exists) {
                           return Text(
                             'Loading...',
                             style: TextStyle(
@@ -159,7 +150,7 @@ String chatRoomId(String user1, String user2) {
                         //String username = snapshot.data?['name'];
                 
                         return Text(
-                          username,
+                          '${userData?['name']}',
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.white,
@@ -167,29 +158,16 @@ String chatRoomId(String user1, String user2) {
                         );
                       
                     
-                  //}
-                //);
+                 
   
                 
-                /*Text(
-                  username,
-                  style: TextStyle(
-                    fontSize: 13,
-                    //fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    
-                  ),
-                );*/
+                
               }
             ),
-                        //Text(docs[index]['postedAt'],
-                        //style: TextStyle(
-                        //color: Colors.white
-                        //),
-                        //)
+                        
                       ],
                     )
-
+              
                   ],
                 ),
                 

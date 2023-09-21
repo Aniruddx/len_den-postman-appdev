@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'ham-menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'chat.dart';
 
 class borrow extends StatefulWidget {
   const borrow({super.key});
@@ -57,7 +58,7 @@ class _borrowState extends State<borrow> {
         ),
         
         body: StreamBuilder(
-          stream: _itemStream, 
+          stream: FirebaseFirestore.instance.collection('borrowitems').snapshots(), 
           builder: ((context, snapshot) {
             if (snapshot.hasError){
               return const Text('Connection Error');
@@ -66,12 +67,15 @@ class _borrowState extends State<borrow> {
             if (snapshot.connectionState == ConnectionState.waiting){
               return const Text('Loading....');
             }
-
+            
+            final lendItems = snapshot.data?.docs;
             var docs = snapshot.data!.docs;
             
             return ListView.builder(
-  itemCount: docs.length,
-  itemBuilder: ((context, index) {
+              itemCount: lendItems?.length,
+              itemBuilder: ((context, index) {
+                final lendItem = lendItems?[index].data() ;
+                final userId = lendItem?['postedBy'];
     // Create a CustomListTile for each item in the list
     return Column(
       children: [
@@ -84,6 +88,7 @@ class _borrowState extends State<borrow> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20.0),
+            
             child: CustomListTile(
               topBar: Container(
                 height: 30,
@@ -105,38 +110,53 @@ class _borrowState extends State<borrow> {
                     Row(
                       children: [
                         
-                        StreamBuilder<DocumentSnapshot>(
-                          stream: FirebaseFirestore.instance.collection('users').doc(_authh.currentUser?.uid).snapshots(),
-                        
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return Text(
-                                'Loading...',
-                                style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                letterSpacing: 2,
-                                ),
-                              );
-                            }
-                            String username = snapshot.data?['name'];
-                            return Text(username,
+                        FutureBuilder(
+              future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
+              builder: (context, userSnapshot) {
+                if (userSnapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // Show loading indicator
+                }
+                if (userSnapshot.hasError) {
+                  return Text('Error: ${userSnapshot.error}');
+                }
+                
+                final userData = userSnapshot.data?.data();
+                
+                
+                        /*if (!snapshot.hasData || !snapshot.data!.exists) {
+                          return Text(
+                            'Loading...',
                             style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              fontSize: 13
+                              letterSpacing: 2,
                             ),
-                            );
-                          }
-                        ),
-                        //Text(docs[index]['postedAt'],
-                        //style: TextStyle(
-                        //color: Colors.white
-                        //),
-                        //)
+                          );
+                        }*/
+                
+                        // Retrieve the username from the user document
+                        //String username = snapshot.data?['name'];
+                
+                        return Text(
+                          '${userData?['name']}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.white,
+                          ),
+                        );
+                      
+                    
+                 
+  
+                
+                
+              }
+            ),
+                        
                       ],
                     )
-
+              
                   ],
                 ),
                 
@@ -178,7 +198,11 @@ class _borrowState extends State<borrow> {
                       icon: const Icon(
                         Icons.send,
                         color: Colors.white,), 
-                      onPressed: () {},
+                      onPressed: () {
+                        //String roomId = chatRoomId(_authh.currentUser.displayName, user2);
+                        setState(() { Navigator.push(context, MaterialPageRoute(builder: ((context) => chat())));
+                      });
+                      },
                     ),
                     ])
               ),

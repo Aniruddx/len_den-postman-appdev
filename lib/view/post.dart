@@ -145,6 +145,9 @@ class _borrowFormState extends State<borrowForm> {
                       fontSize: 15,
                     )
                     ),
+                    style: TextStyle(
+                      color: Colors.yellow
+                    ),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please enter a title';
@@ -159,6 +162,9 @@ class _borrowFormState extends State<borrowForm> {
                       color: Colors.white,
                       fontSize: 15,
                     )
+                    ),
+                    style: TextStyle(
+                      color: Colors.yellow
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -235,6 +241,9 @@ class _lendFormState extends State<lendForm> {
                       fontSize: 15,
                     )
                     ),
+                    style: TextStyle(
+                      color: Colors.yellow
+                    ),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please enter a title';
@@ -249,6 +258,9 @@ class _lendFormState extends State<lendForm> {
                       color: Colors.white,
                       fontSize: 15,
                     )
+                    ),
+                    style: TextStyle(
+                      color: Colors.yellow
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
