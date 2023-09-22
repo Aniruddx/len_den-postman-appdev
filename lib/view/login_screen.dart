@@ -35,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await _firestore.collection('users').doc(_authh.currentUser?.uid).set({        //doc means inserting a document in my collection
           "name": reslut.displayName, 
           "email": reslut.email,
+          "uid": _authh.currentUser?.uid,
           //"status": status
         });  
         

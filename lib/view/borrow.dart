@@ -200,8 +200,7 @@ class _borrowState extends State<borrow> {
                         color: Colors.white,), 
                       onPressed: () {
                         //String roomId = chatRoomId(_authh.currentUser.displayName, user2);
-                        setState(() { Navigator.push(context, MaterialPageRoute(builder: ((context) => chat())));
-                      });
+                        
                       },
                     ),
                     ])

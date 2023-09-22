@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:len_den1/view/chat.dart';
+import 'package:len_den1/view/chat_list_screen.dart';
 import 'ham-menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'chat.dart';
+//import 'chat.dart';
 
 
 
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   void initState(){
     super.initState();
   }
-
+String recieverUserEmail = '';
 String chatRoomId(String user1, String user2) {
   if(user1[0].toLowerCase().codeUnits[0] > user2[0].toLowerCase().codeUnits[0]) {
     return "$user1$user2";
@@ -62,7 +63,10 @@ String chatRoomId(String user1, String user2) {
               iconSize: 30,
               icon: const Icon(
                 Icons.chat_rounded), 
-              onPressed: () {},
+              onPressed: () {
+                setState(() { Navigator.push(context, MaterialPageRoute(builder: ((context) => ChatListScreen())));
+                });
+              },
             )
         ],
         ) ,
@@ -87,6 +91,7 @@ String chatRoomId(String user1, String user2) {
               itemBuilder: ((context, index) {
                 final lendItem = lendItems?[index].data() ;
                 final userId = lendItem?['postedBy'];
+                String receiverEmail = '';
     // Create a CustomListTile for each item in the list
     return Column(
       children: [
@@ -132,6 +137,8 @@ String chatRoomId(String user1, String user2) {
                 }
                 
                 final userData = userSnapshot.data?.data();
+
+                receiverEmail = userData?['email'];
                 
                 
                         /*if (!snapshot.hasData || !snapshot.data!.exists) {
@@ -209,10 +216,35 @@ String chatRoomId(String user1, String user2) {
                       icon: const Icon(
                         Icons.send,
                         color: Colors.white,), 
-                      onPressed: () {
-                        //String roomId = chatRoomId(_authh.currentUser.displayName, user2);
-                        setState(() { Navigator.push(context, MaterialPageRoute(builder: ((context) => chat())));
-                      });
+                      onPressed: () async {
+                        String currentUserId = _authh.currentUser!.uid;
+                        String otherUserId = userId;
+                        
+                        String roomId = chatRoomId(currentUserId, otherUserId);
+                        DocumentReference chatRoomRef = FirebaseFirestore.instance.collection('chatRooms').doc(roomId);
+
+                          if (!(await chatRoomRef.get()).exists) {
+      // Create the chat room if it doesn't exist
+                          await chatRoomRef.set({
+                          'users': [currentUserId, otherUserId],
+                          });
+                          }
+                        
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => chat(
+                            //roomId: roomId,
+                            //currentUserId: currentUserId,
+                            receiverUserEmail: receiverEmail, 
+                            receiverUserId:  otherUserId, recieverUserEmail: '$receiverEmail', recieverUserId: '$otherUserId',
+                            //otherUserName: userData?['name'],
+                            ), 
+                          ),
+                        );
+                        
+
                       },
                     ),
                     ])

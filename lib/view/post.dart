@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:len_den1/view/borrow.dart';
+import 'package:len_den1/view/lend.dart';
 import 'ham-menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -178,6 +180,8 @@ class _borrowFormState extends State<borrowForm> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _postItem();
+                        setState(() { Navigator.push(context, MaterialPageRoute(builder: ((context) => borrow())));
+                });
                       }
                     },
                     child: Text('POST'),
@@ -274,6 +278,8 @@ class _lendFormState extends State<lendForm> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _lendItem();
+                        setState(() { Navigator.push(context, MaterialPageRoute(builder: ((context) => HomePage())));
+                });
                       }
                     },
                     child: Text('POST'),
